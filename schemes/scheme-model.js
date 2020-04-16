@@ -20,18 +20,25 @@ function findById(passedId){
 
 function findSteps(passedId){
     return db('steps')
-    .where('scheme id', '=', passedId);
+    .where('steps.scheme_id', passedId)
+    .join('schemes', 'steps.scheme_id', 'schemes.id')
+    .select('steps.id','schemes.scheme_name','steps.step_number', 'steps.instructions');
 }
 
 function add(passedData){
     return db('schemes')
     .insert(passedData)
-    .then(([newSchemeId]) => {
+    .then(([newSchemeId]) => {'schemes', 'id', '=', passed
         return findById(newSchemeId);
     });
 }
 
 function addStep(passedData, passedId){
+    return db('steps')
+    .insert(passedData)
+    .then(() => {
+        return findSteps(passedId);
+    })
 }
 
 function update(passedChanges, passedId){
